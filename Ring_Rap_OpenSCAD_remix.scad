@@ -1,23 +1,34 @@
+//rim.scad contains all of the funtions for making the parametric rim.
 include <rim.scad>
+//buil_specifications.scad contains all of the parameters for this build of the ring rap.
 include <Build_specifications.scad>
 $fs=1;
 $fa=1;
 assembly=true;
 print_legs=false;
 
-
+//This module is base parts for the Z pillar
 module pillar_legs(location_angle,bevel_radius=5){
+	// this difference will be used for the rim and Nema motor
 	difference(){
+		//this rotation, translation, and difference are for the pillar mount
 		rotate([0,0,location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0])difference(){
+			//this union attaches the pillar mount to the nema block
 			union(){
+				//this hull makes the smoothed pillar block
 				hull(){
+					//pillar holder
 					cylinder(r=pillar_rod_diameter/2+pillar_support_wall_thickness, h=length_of_pillar_support);
+					//the next two lines make the transition between the block and the pillar smoother
 					translate([0,-pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
 					translate([0,+pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
 				}
+				//this hull is for the nema block and the rim mount
 				hull(){
+					//these are 2 cylinders that provide the most extreme edges of the nema cut out.
 					translate([2*pillar_support_wall_thickness+overall_rim_thickness+nema_motor_box_size,-nema_motor_box_size/2,0])cylinder(r=bevel_radius,h=base_leg_height-rim_width*1.5);
 					translate([2*pillar_support_wall_thickness+overall_rim_thickness+nema_motor_box_size,nema_motor_box_size/2,0])cylinder(r=bevel_radius,h=base_leg_height-rim_width*1.5);
+					//these are duplicate cylinders for joining the pillar to the nema block
 					translate([0,-pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
 					translate([0,+pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
 				}
@@ -33,13 +44,13 @@ module pillar_legs(location_angle,bevel_radius=5){
 	}
 }
 
-
+//this module is used to draw the pillars
 module pillar(location_angle,){
 		rotate([0,0,location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0]){
 		translate([0,0,pillar_support_wall_thickness])cylinder(r=pillar_rod_diameter/2, h=pillar_h);
 	}
 }
-
+//this module makes the feet for the ring rap. this is where the bed will mount.
 module base_legs(location_angle,leg_xy_size,z_height,bevel_radius=10){
 	difference(){
 			rotate([0,0,location_angle])translate([iso_rim_size/2,0,0])rotate([0,0,45])union(){
