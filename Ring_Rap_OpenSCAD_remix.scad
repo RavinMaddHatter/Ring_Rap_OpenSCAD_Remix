@@ -4,11 +4,13 @@ include <rim.scad>
 include <Build_specifications.scad>
 $fs=1;
 $fa=1;
-assembly=false;
-print_legs=false;
 
+//these switches determin how the part is displayed in the render window, it is recomended to only have 1 switch on at a time, you may need to zoom in our out depending upon what you have selected.
+assembly=false;			//a render of what the current ring rap looks like
+print_legs=false;			//4 legs put in a printable arangement, you may want to only do one at a time
+test_print_prof=true;	//this is a test piece to check the profile you have chosen against the rim you are using
+test_print_diam=false;	//once you have matched the profile of your rim, you now can check to see if the diameter you have chosen matches the rim diameter by printing this piece.
 
-base_legs(145,base_leg_footprint,base_leg_height);
 //This module is base parts for the Z pillar
 module pillar_legs(location_angle,bevel_radius=5){
 	// this difference will be used for the rim and Nema motor
@@ -78,10 +80,7 @@ module base_legs(location_angle,leg_xy_size,z_height,bevel_radius=10){
 	
 }
 
-
-
-
-if(assembly){
+module base(){
 	pillar_legs(0);
 	pillar_legs(180);
 	pillar(0);
@@ -93,6 +92,11 @@ if(assembly){
 	base_legs(315,base_leg_footprint,base_leg_height);
 	translate([0,0,base_leg_height-rim_width/2])rim(iso_rim_size,number_of_spokes,rim_shape=cur_rim_shape,spoke_hole_diam=spoke_hole_diameter);
 }
+
+
+if(assembly){
+	base();
+}
 if(print_legs){
 //LEG 1
 	translate([(base_leg_footprint/2+5),(base_leg_footprint/2+5),0])rotate([0,0,-45])translate([-iso_rim_size/2,0,0])rotate([0,0,-45])base_legs(45,base_leg_footprint,base_leg_height);
@@ -102,4 +106,11 @@ if(print_legs){
 	translate([(base_leg_footprint/2+5),-(base_leg_footprint/2+5),0])rotate([0,0,-45])translate([-iso_rim_size/2,0,0])rotate([0,0,-225])base_legs(225,base_leg_footprint,base_leg_height);
 //LEG 4
 	translate([-(base_leg_footprint/2+5),-(base_leg_footprint/2+5),0])rotate([0,0,-45])translate([-iso_rim_size/2,0,0])rotate([0,0,-315])base_legs(315,base_leg_footprint,base_leg_height);
+	}
+
+if (test_print_diam){
+	rim_diam_check(iso_rim_size,number_of_spokes,spoke_hole_diam,rim_shape=cur_rim_shape);
+}
+if (test_print_prof){
+	rim_profile_fit_sample(rim_shape=cur_rim_shape);
 }
