@@ -4,9 +4,11 @@ include <rim.scad>
 include <Build_specifications.scad>
 $fs=1;
 $fa=1;
-assembly=true;
+assembly=false;
 print_legs=false;
 
+
+base_legs(145,base_leg_footprint,base_leg_height);
 //This module is base parts for the Z pillar
 module pillar_legs(location_angle,bevel_radius=5){
 	// this difference will be used for the rim and Nema motor
@@ -67,12 +69,13 @@ module base_legs(location_angle,leg_xy_size,z_height,bevel_radius=10){
 			}
 			
 		}
-		translate([0,0,z_height-rim_width/2])rim_segment_spoked(iso_rim_size,number_of_spokes,location_angle-15,location_angle+15,spoke_hole_diam=spoke_hole_diameter,rim_shape=cur_rim_shape);
+		translate([0,0,z_height-rim_width/2])rim_segment_spoked(iso_rim_size,number_of_spokes,90-location_angle-15,90-location_angle+15,spoke_hole_diam=spoke_hole_diameter,rim_shape=cur_rim_shape);
 		translate([0,0,z_height-rim_width])difference(){
 			cylinder(r=iso_rim_size,h=rim_width,$fa=1,$fs=10);
 			cylinder(r=iso_rim_size/2,h=rim_width,$fa=1,$fs=10);
 		}
 	}
+	
 }
 
 
