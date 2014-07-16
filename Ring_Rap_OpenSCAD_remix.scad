@@ -5,9 +5,40 @@ $fa=1;
 assembly=true;
 print_legs=false;
 
-//module pillar_legs(){
-///pillar_diameterl;
-//}
+
+module pillar_legs(location_angle,bevel_radius=5){
+	difference(){
+		rotate([0,0,location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0])difference(){
+			union(){
+				hull(){
+					cylinder(r=pillar_rod_diameter/2+pillar_support_wall_thickness, h=length_of_pillar_support);
+					translate([0,-pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
+					translate([0,+pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
+				}
+				hull(){
+					translate([2*pillar_support_wall_thickness+overall_rim_thickness+nema_motor_box_size,-nema_motor_box_size/2,0])cylinder(r=bevel_radius,h=base_leg_height-rim_width*1.5);
+					translate([2*pillar_support_wall_thickness+overall_rim_thickness+nema_motor_box_size,nema_motor_box_size/2,0])cylinder(r=bevel_radius,h=base_leg_height-rim_width*1.5);
+					translate([0,-pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
+					translate([0,+pillar_y/2,0])cylinder(r=bevel_radius,h=base_leg_height);
+				}
+			}
+			translate([0,0,pillar_support_wall_thickness])cylinder(r=pillar_rod_diameter/2, h=length_of_pillar_support);
+			translate([2*pillar_support_wall_thickness+bevel_radius+overall_rim_thickness,-nema_motor_box_size/2,pillar_support_wall_thickness])cube([nema_motor_box_size,nema_motor_box_size,base_leg_height]);
+		}
+		translate([0,0,base_leg_height-rim_width/2])rim_segment_spoked(iso_rim_size,number_of_spokes,90+location_angle-15,90+location_angle+15,spoke_hole_diam=spoke_hole_diameter,rim_shape=cur_rim_shape);
+		translate([0,0,base_leg_height-rim_width])difference(){
+			cylinder(r=iso_rim_size,h=rim_width,$fa=1,$fs=10);
+			cylinder(r=iso_rim_size/2,h=rim_width,$fa=1,$fs=10);
+		}
+	}
+}
+
+
+module pillar(location_angle,){
+		rotate([0,0,location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0]){
+		translate([0,0,pillar_support_wall_thickness])cylinder(r=pillar_rod_diameter/2, h=pillar_h);
+	}
+}
 
 module base_legs(location_angle,leg_xy_size,z_height,bevel_radius=10){
 	difference(){
@@ -27,8 +58,8 @@ module base_legs(location_angle,leg_xy_size,z_height,bevel_radius=10){
 		}
 		translate([0,0,z_height-rim_width/2])rim_segment_spoked(iso_rim_size,number_of_spokes,location_angle-15,location_angle+15,spoke_hole_diam=spoke_hole_diameter,rim_shape=cur_rim_shape);
 		translate([0,0,z_height-rim_width])difference(){
-			cylinder(r=iso_rim_size,h=rim_width);
-			cylinder(r=iso_rim_size/2,h=rim_width);
+			cylinder(r=iso_rim_size,h=rim_width,$fa=1,$fs=10);
+			cylinder(r=iso_rim_size/2,h=rim_width,$fa=1,$fs=10);
 		}
 	}
 }
@@ -37,6 +68,11 @@ module base_legs(location_angle,leg_xy_size,z_height,bevel_radius=10){
 
 
 if(assembly){
+	pillar_legs(0);
+	pillar_legs(180);
+	pillar(0);
+	pillar(180);	
+
 	base_legs(45,base_leg_footprint,base_leg_height);
 	base_legs(135,base_leg_footprint,base_leg_height);
 	base_legs(225,base_leg_footprint,base_leg_height);
