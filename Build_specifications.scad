@@ -9,7 +9,11 @@ overall_rim_thickness=18.6;
 
 //feet sizeing
 base_leg_footprint=80;
-base_leg_height=70;
+base_leg_height=40;
+bed_leveling_nut_trap_wrench_width=5.5;
+bed_leveling_bolt_size=3.3;
+bed_leveling_nut_trap_depth=2;
+bed_leveling_bolt_offset=15;
 
 
 
