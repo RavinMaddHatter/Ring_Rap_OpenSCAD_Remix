@@ -1,5 +1,5 @@
 //general Build Info
-number_of_pillars=4;//2,3,4 are the current options
+number_of_pillars=3;//2,3,4 are the current options
 
 //rim sizes
 iso_rim_size=559;

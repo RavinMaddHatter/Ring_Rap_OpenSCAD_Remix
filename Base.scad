@@ -4,7 +4,7 @@ include <rim.scad>
 include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
-
+base();
 
 
 module base(){
@@ -30,6 +30,7 @@ module pillar_base_print_ready(){
 	rotate([0,0,180])translate([2.5,0,0])pillar_for_print(180);
 }
 module base_pillar_set(){
+	echo(number_of_pillars);
 if(number_of_pillars==2){
 		pillar_legs(0);
 		pillar_legs(180);
@@ -39,10 +40,10 @@ if(number_of_pillars==2){
 	if(number_of_pillars==3){
 		pillar_legs(0);
 		pillar(0);
-		pillar_legs(90);
-		pillar(90);
-		pillar_legs(180);	
-		pillar(180);
+		pillar_legs(120);
+		pillar(120);
+		pillar_legs(240);	
+		pillar(240);
 	}
 	if(number_of_pillars==4){
 		pillar_legs(0);
