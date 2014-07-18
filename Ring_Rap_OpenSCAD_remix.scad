@@ -10,11 +10,11 @@ $fs=1;
 $fa=1;
 
 //these switches determin how the part is displayed in the render window, it is recomended to only have 1 switch on at a time, you may need to zoom in our out depending upon what you have selected.
-assembly=false;			//a render of what the current ring rap looks like
+assembly=true;			//a render of what the current ring rap looks like
 print_legs=false;			//4 legs put in a printable arangement, you may want to only do one at a time
 test_print_prof=false;	//this is a test piece to check the profile you have chosen against the rim you are using
 test_print_diam=false;	//once you have matched the profile of your rim, you now can check to see if the diameter you have chosen matches the rim diameter by printing this piece.
-print_pillars=true;		//for pring ready pillars.
+print_pillars=false;		//for pring ready pillars.
 
 
 
@@ -23,7 +23,7 @@ module base(){
 	pillar_legs(180);
 	pillar(0);
 	pillar(180);	
-
+	base_plate();
 	base_legs(45,base_leg_footprint,base_leg_height);
 	base_legs(135,base_leg_footprint,base_leg_height);
 	base_legs(225,base_leg_footprint,base_leg_height);

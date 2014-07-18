@@ -7,13 +7,8 @@ include <Utility_Functions.scad>
 
 
 
-
 module base(){
-	pillar_legs(0);
-	pillar_legs(180);
-	pillar(0);
-	pillar(180);	
-
+	base_pillar_set();
 	base_legs(45,base_leg_footprint,base_leg_height);
 	base_legs(135,base_leg_footprint,base_leg_height);
 	base_legs(225,base_leg_footprint,base_leg_height);
@@ -34,7 +29,32 @@ module pillar_base_print_ready(){
 	translate([2.5,0,0])pillar_for_print(0);
 	rotate([0,0,180])translate([2.5,0,0])pillar_for_print(180);
 }
-
+module base_pillar_set(){
+if(number_of_pillars==2){
+		pillar_legs(0);
+		pillar_legs(180);
+		pillar(0);
+		pillar(180);
+	}
+	if(number_of_pillars==3){
+		pillar_legs(0);
+		pillar(0);
+		pillar_legs(90);
+		pillar(90);
+		pillar_legs(180);	
+		pillar(180);
+	}
+	if(number_of_pillars==4){
+		pillar_legs(0);
+		pillar(0);
+		pillar_legs(90);
+		pillar(90);
+		pillar_legs(180);	
+		pillar(180);
+		pillar_legs(270);	
+		pillar(270);
+	}
+}
 
 
 module pillar_for_print(location_angle){
@@ -118,3 +138,19 @@ module base_legs(location_angle,leg_xy_size,z_height,bevel_radius=10){
 	
 }
 
+
+
+module base_plate(){
+	rotate([0,0,45])difference(){
+		hull(){
+			for( location_angle=[0,90,180,270]){
+				rotate([0,0,location_angle])translate([iso_rim_size/2,0,base_leg_height+space_for_leveling])
+				translate([-base_leg_footprint/2+bed_leveling_bolt_offset,base_leg_footprint/2-base_leg_height-bed_leveling_bolt_offset,0])cylinder(r=bed_leveling_bolt_size/2+bed_thickness+base_plate_space_around_bolt,h=bed_thickness);
+			}
+		}
+		
+		
+	}
+
+	
+}

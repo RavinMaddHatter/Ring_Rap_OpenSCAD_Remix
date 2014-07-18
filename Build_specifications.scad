@@ -1,3 +1,6 @@
+//general Build Info
+number_of_pillars=4;//2,3,4 are the current options
+
 //rim sizes
 iso_rim_size=559;
 number_of_spokes=36;
@@ -24,4 +27,9 @@ pillar_support_wall_thickness=6;
 nema_motor_box_size=43.5;
 pillar_y=90;
 pillar_h=1000;
+
+//plate sizing
+base_plate_space_around_bolt=7;
+bed_thickness=5;
+space_for_leveling=10;
 
