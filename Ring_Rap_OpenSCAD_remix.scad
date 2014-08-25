@@ -18,19 +18,6 @@ print_pillars=false;		//for pring ready pillars.
 
 
 
-module base(){
-	pillar_legs(0);
-	pillar_legs(180);
-	pillar(0);
-	pillar(180);	
-	base_plate();
-	base_legs(45,base_leg_footprint,base_leg_height);
-	base_legs(135,base_leg_footprint,base_leg_height);
-	base_legs(225,base_leg_footprint,base_leg_height);
-	base_legs(315,base_leg_footprint,base_leg_height);
-	translate([0,0,base_leg_height-rim_width/2])rim(iso_rim_size,number_of_spokes,rim_shape=cur_rim_shape,spoke_hole_diam=spoke_hole_diameter);
-}
-
 
 if(assembly){
 	base();

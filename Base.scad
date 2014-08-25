@@ -4,7 +4,7 @@ include <rim.scad>
 include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
-base();
+
 
 
 module base(){
@@ -13,7 +13,8 @@ module base(){
 	base_legs(135,base_leg_footprint,base_leg_height);
 	base_legs(225,base_leg_footprint,base_leg_height);
 	base_legs(315,base_leg_footprint,base_leg_height);
-	translate([0,0,base_leg_height-rim_width/2])rim(iso_rim_size,number_of_spokes,rim_shape=cur_rim_shape,spoke_hole_diam=spoke_hole_diameter);
+	rotate([0,0,5])base_plate();
+	translate([0,0,base_leg_height-rim_width/2])rim(iso_rim_size,number_of_spokes,rim_shape=cur_rim_shape,spoke_hole_diam=spoke_hole_diameter,number_of_segments=120);
 }
 module legs_print_ready(){
 //LEG 1
@@ -40,10 +41,10 @@ if(number_of_pillars==2){
 	if(number_of_pillars==3){
 		pillar_legs(0);
 		pillar(0);
-		pillar_legs(120);
-		pillar(120);
-		pillar_legs(240);	
-		pillar(240);
+		pillar_legs(90);
+		pillar(90);
+		pillar_legs(270);	
+		pillar(270);
 	}
 	if(number_of_pillars==4){
 		pillar_legs(0);

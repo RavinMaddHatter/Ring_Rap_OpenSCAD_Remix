@@ -22,25 +22,19 @@ module rim_profile_fit_sample(rim_shape="Nucleon_Front"){
 		translate([-500,0,0])cube([1000,1000,15]);
 	}
 }
+
+
 module rim_spoked(ISO_rim_diameter, number_of_spokes,spoke_hole_diam=2,rim_shape="Nucleon_Front", number_of_segments=70){
-	rotate([0,90,0])union(){
-		for (seg_num=[1:number_of_segments]){
-			rotate([seg_num*360/number_of_segments,0,0])translate([0,ISO_rim_diameter/2,-.5*pi*ISO_rim_diameter/number_of_segments])linear_extrude(pi*ISO_rim_diameter/number_of_segments)import(file = "rim_section_contour.dxf",layer=rim_shape);
-		}
-		for (spoke_num=[1:number_of_spokes]){
-			rotate([spoke_num*360/number_of_spokes,0,0])translate([0,ISO_rim_diameter/2,0])rotate([90,0,0])cylinder(r=spoke_hole_diam/2,h=ISO_rim_diameter/8);
-		}
+	rotate_extrude(convexity = 10,$fn=number_of_segments)translate([ISO_rim_diameter/2, 0, 0])rotate([0,0,270])import(file = "rim_section_contour.dxf",layer=rim_shape);
+	for (spoke_num=[1:number_of_spokes]){
+		rotate([spoke_num*360/number_of_spokes,90,0])translate([0,ISO_rim_diameter/2,0])rotate([90,0,0])cylinder(r=spoke_hole_diam/2,h=ISO_rim_diameter/8);
 	}
 }
 module rim(ISO_rim_diameter, number_of_spokes,spoke_hole_diam=2,rim_shape="Nucleon_Front", number_of_segments=70){
-	rotate([0,90,0])difference(){
-		union(){
-			for (seg_num=[1:number_of_segments]){
-				rotate([seg_num*360/number_of_segments,0,0])translate([0,ISO_rim_diameter/2,-.5*pi*ISO_rim_diameter/number_of_segments])linear_extrude(pi*ISO_rim_diameter/number_of_segments)import(file = "rim_section_contour.dxf",layer=rim_shape);
-			}
-		}
+	difference(){
+		rotate_extrude(convexity = 10,$fn=number_of_segments)translate([ISO_rim_diameter/2, 0, 0])rotate([0,0,270])import(file = "rim_section_contour.dxf",layer=rim_shape);
 		for (spoke_num=[1:number_of_spokes]){
-			rotate([spoke_num*360/number_of_spokes,0,0])translate([0,ISO_rim_diameter/4,0])rotate([270,0,0])cylinder(r=spoke_hole_diam/2,h=ISO_rim_diameter/2);
+			rotate([spoke_num*360/number_of_spokes,90,0])translate([0,ISO_rim_diameter/4,0])rotate([270,0,0])cylinder(r=spoke_hole_diam/2,h=ISO_rim_diameter/2);
 		}
 	}
 }
