@@ -5,7 +5,9 @@ include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
 //Base for Ring_rap is contained in Base.scad
-include <Base.scad>
+include <Base.scad>
+//gantry for Ring_rap is contained in Base.scad
+include <Gantry.scad>
 $fs=1;
 $fa=1;
 
@@ -20,7 +22,8 @@ print_pillars=false;		//for pring ready pillars.
 
 
 if(assembly){
-	base();
+	base();
+	translate([0,0,pillar_h/2])assembled_gantry();
 }
 
 if(print_pillars){

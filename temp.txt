@@ -1,0 +1,2 @@
+ECHO: "name:Gantry_corner_4.STL"
+No top-level object found.

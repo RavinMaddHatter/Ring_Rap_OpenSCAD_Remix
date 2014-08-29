@@ -4,8 +4,7 @@ include <rim.scad>
 include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
-assembled_gantry();
-
+//assembled_gantry();
 
 carrage_z_offset=overall_rim_thickness/2+distance_between_rods/2+mount_wall_thickness+cross_carriage_bearings[2]/2;
 
@@ -22,6 +21,44 @@ module assembled_gantry(){
 	}
 	rim(iso_rim_size,number_of_spokes,rim_shape=cur_rim_shape,spoke_hole_diam=spoke_hole_diameter,number_of_segments=120);
 	rods();
+	ganntry_pillar_set();
+	ganntry_pillar_bushings_set();
+}
+module ganntry_pillar_set(){
+	echo(number_of_pillars);
+if(number_of_pillars==2){
+		pillar_bushing(0);
+		pillar_bushing(180);
+	}
+	if(number_of_pillars==3){
+		pillar_bushing(0);
+		pillar_bushing(180);
+		pillar_bushing(90);
+	}
+	if(number_of_pillars==4){
+		pillar_bushing(0);
+		pillar_bushing(180);
+		pillar_bushing(90);
+		pillar_bushing(270);
+	}
+}
+module ganntry_pillar_bushings_set(){
+	echo(number_of_pillars);
+if(number_of_pillars==2){
+		pillar_bushing_only(0);
+		pillar_bushing_only(180);
+	}
+	if(number_of_pillars==3){
+		pillar_bushing_only(0);
+		pillar_bushing_only(180);
+		pillar_bushing_only(90);
+	}
+	if(number_of_pillars==4){
+		pillar_bushing_only(0);
+		pillar_bushing_only(180);
+		pillar_bushing_only(90);
+		pillar_bushing_only(270);
+	}
 }
 
 module assembled_cross_carrage(){
@@ -34,10 +71,10 @@ module assembled_cross_carrage(){
 module cross_carrage(){
 	difference(){
 		hull(){
-			translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,-distance_between_rods/2])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1]+gantry_wall_thickness*2,cross_carriage_bearings[1]+gantry_wall_thickness*2],center=true);
-			rotate([0,0,-90])translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,distance_between_rods/2])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1]+gantry_wall_thickness*2,cross_carriage_bearings[1]+gantry_wall_thickness*2],center=true);
-				rotate([0,0,-90])translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,-distance_between_rods/2])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1],cross_carriage_bearings[1]+gantry_wall_thickness*2],center=true);
-				translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,distance_between_rods/2])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1],cross_carriage_bearings[1]+gantry_wall_thickness*2],center=true);
+			translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,-distance_between_rods/2+(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)])rotate([0,0,90])cube([cross_carriage_bearings[0]-.4,cross_carriage_bearings[1]+gantry_wall_thickness,cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
+			rotate([0,0,-90])translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,distance_between_rods/2-(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1]+gantry_wall_thickness*2,cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
+				rotate([0,0,-90])translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)-distance_between_rods/2])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1],cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
+				translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,distance_between_rods/2-(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1],cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
 			}	
 		translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,-distance_between_rods/2])rotate([0,90,90])cylinder(r=cross_carriage_bearings[1]/2,h=cross_carriage_bearings[0],center=true);
 		translate([cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[1]/2,h=cross_carriage_bearings[0],center=true);
@@ -47,7 +84,8 @@ module cross_carrage(){
 			translate([00,-1000,0])cube([cross_carriage_bearings[1]+1,cross_carriage_bearings[1]+1,(cross_carriage_bearings[1]+distance_between_rods)*2],center=true);
 			cube([cross_carriage_bearings[1]+1,cross_carriage_bearings[1]+1,(cross_carriage_bearings[1]+distance_between_rods)*2],center=true);
 		}
-		translate([cross_carriage_bearings[0]-hot_end_cut_out_radius/2+gantry_wall_thickness,cross_carriage_bearings[0]-hot_end_cut_out_radius/2+gantry_wall_thickness,cross_carriage_bearings[1]/2+gantry_wall_thickness+distance_between_rods/2+.01])rotate([180,0,0])cylinder(r=mount_screw_diam/2,h=mount_screw_depth);
+		translate([cross_carriage_bearings[0]-hot_end_cut_out_radius/2+gantry_wall_thickness,cross_carriage_bearings[0]-hot_end_cut_out_radius/2+gantry_wall_thickness,0])rotate([180,0,0])cylinder(r=mount_screw_diam/2,h=(cross_carriage_bearings[1]+gantry_wall_thickness+distance_between_rods)*2,center=true);
+
 	}
 	
 }
@@ -70,9 +108,10 @@ module carriage_rim_mount(location_angle){
 rotate([0,0,90-location_angle])translate([iso_rim_size/2-sqrt(motor_x*motor_x+motor_y*motor_y)/2,0,-overall_rim_thickness/2-mount_wall_thickness])cylinder(r=rim_bevel_radius,h=overall_rim_thickness+mount_wall_thickness*2);
 			}
 		}
-		rim_segment_spoked(iso_rim_size-mount_wall_thickness, number_of_spokes, location_angle-8,location_angle+15,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+		rim_segment_spoked(iso_rim_size, number_of_spokes, location_angle-8,location_angle+15,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
 		hull(){
-			rim_segment(iso_rim_size+mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+			rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+			rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2+2*mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
 		}
 		translate([0,50,-distance_between_rods/2])rotate([0,90,90])cylinder(r=cross_carriage_bearings[2]/2,h=sin(45)*iso_rim_size,center=true);
 	
@@ -96,3 +135,33 @@ translate([0,sin(45)*iso_rim_size/2,carrage_z_offset]){
 	}
 }
 
+module pillar_bushing_only(location_angle){
+	difference(){
+		rotate([0,0,90-location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0]){
+			translate([0,0,pillar_support_wall_thickness])cylinder(r=gantry_bearings[1]/2, h=gantry_bearings[0]+.5,center=true);
+			}
+		rotate([0,0,90-location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0]){
+			translate([0,0,pillar_support_wall_thickness])cylinder(r=gantry_bearings[2]/2, h=gantry_bearings[0]*2,center=true);
+			}
+	}
+}
+//This module is the piller slides
+module pillar_bushing(location_angle,bevel_radius=5){
+	difference(){
+		hull(){
+			rim_segment(iso_rim_size-mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+			translate([0,0,-mount_wall_thickness])rim_segment(iso_rim_size, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+		translate([0,0,mount_wall_thickness])rim_segment(iso_rim_size, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+		rotate([0,0,90-location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0]){
+			translate([0,0,pillar_support_wall_thickness])cylinder(r=gantry_bearings[1]/2+wall_thickness, h=gantry_bearings[0],center=true);
+			}
+		}
+		rotate([0,0,90-location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0]){
+			translate([0,0,pillar_support_wall_thickness])cylinder(r=gantry_bearings[1]/2, h=gantry_bearings[0]*2,center=true);
+			}
+		hull(){
+			rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+			rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2+2*mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+		}
+	}
+}
