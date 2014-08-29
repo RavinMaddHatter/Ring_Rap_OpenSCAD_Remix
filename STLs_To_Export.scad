@@ -7,7 +7,9 @@ include <Utility_Functions.scad>
 //Base for Ring_rap is contained in Base.scad
 include <Base.scad>
 //gantry for Ring_rap is contained in Base.scad
-include <Gantry.scad>
+include <Gantry.scad>
+//top rim setup
+include <Top.scad>
 part=0;
 build=false;
 if(part==1){

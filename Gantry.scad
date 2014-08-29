@@ -4,12 +4,41 @@ include <rim.scad>
 include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
-//assembled_gantry();
+carrage_z_offset=overall_rim_thickness/2+distance_between_rods/2+mount_wall_thickness+cross_carriage_bearings[2]/2;//computes the 
+assembled_gantry();
 
-carrage_z_offset=overall_rim_thickness/2+distance_between_rods/2+mount_wall_thickness+cross_carriage_bearings[2]/2;
+module slider(Z_angle=0,x_angle=0){
 
+	rotate([0,0,Z_angle])translate([0,sin(45)*iso_rim_size/2,carrage_z_offset]){
+		rotate([0,x_angle,0])difference(){
+			hull(){
+				translate([0,0,distance_between_rods/2-Sled_bearings[1]*.2/2-mount_wall_thickness/2])cube([Sled_bearings[0],Sled_bearings[1]+mount_wall_thickness*2,Sled_bearings[1]*.8+mount_wall_thickness],center=true);
+				translate([0,0,-distance_between_rods/2-Sled_bearings[2]-mount_wall_thickness/2])cube([Sled_bearings[1],Sled_bearings[1]+mount_wall_thickness*2,.1],center=true);
+			}
+			translate([0,0,cross_carriage_bearings[1]/2])rotate([0,90,0])cylinder(r=Sled_bearings[1]/2,h=Sled_bearings[0]*2,center=true);
+			translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]/2,h=Sled_bearings[1]*2,center=true);
+		}
+	}
+}
+module slider_bearing(Z_angle=0,x_angle=0){
+
+	rotate([0,0,Z_angle])translate([0,sin(45)*iso_rim_size/2,carrage_z_offset]){
+		rotate([0,x_angle,0])difference(){
+			translate([0,0,Sled_bearings[1]/2])rotate([0,90,0])cylinder(r=Sled_bearings[1]/2,h=Sled_bearings[0]+1,center=true);
+			translate([0,0,Sled_bearings[1]/2])rotate([0,90,0])cylinder(r=Sled_bearings[2]/2,h=Sled_bearings[0]*2,center=true);
+		}
+	}
+}
 
 module assembled_gantry(){
+	slider();
+	slider(90,180);
+	slider(180);
+	slider(270,180);
+	slider_bearing();
+	slider_bearing(90,180);
+	slider_bearing(180);
+	slider_bearing(270,180);
 	carriage_rim_mount(45);
 	carriage_rim_mount(135);
 	carriage_rim_mount(225);
