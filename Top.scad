@@ -4,10 +4,7 @@ include <rim.scad>
 include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
-//Base for Ring_rap is contained in Base.scad
-include <Base.scad>
-//gantry for Ring_rap is contained in Base.scad
-include <Gantry.scad>
+
 
 top_brackets(0);
 
@@ -28,4 +25,3 @@ module top_brackets(location_angle,bevel_radius=5){
 	}
 }
 
-rim_segment_spoked(iso_rim_size-mount_wall_thickness, number_of_spokes, 0-7.5,0+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);

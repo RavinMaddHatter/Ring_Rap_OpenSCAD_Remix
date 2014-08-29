@@ -1,2 +1,2 @@
-ECHO: "name:Gantry_Pillar_2.STL"
+ECHO: "name:Sleds_1-4.STL"
 No top-level object found.
