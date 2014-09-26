@@ -7,12 +7,12 @@ include <Utility_Functions.scad>
 //Base for Ring_rap is contained in Base.scad
 include <Base.scad>
 //gantry for Ring_rap is contained in Base.scad
-include <Gantry.scad>
-//top for Ring_rap is contained in Top.scad
+include <Gantry.scad>
+//top for Ring_rap is contained in Top.scad
 include <Top.scad>
 //top rim setup
-//include <Top.scad>
-$fs=1;
+//include <Top.scad>
+$fs=1;
 $fa=1;
 part=0;
 build=false;
@@ -63,12 +63,12 @@ if(part==8){
 	if(build){
 		pillar_legs(180);
 	}
-}
-if(part==9){
-	echo("name:Base_Pillar_3.STL");
-	if(build){
-		pillar_legs(90);
-	}
+}
+if(part==9){
+	echo("name:Base_Pillar_3.STL");
+	if(build){
+		pillar_legs(90);
+	}
 }
 if(part==10){
 	echo("name:Cross_carrage.STL");
@@ -111,34 +111,34 @@ if(part==16){
 	if(build){
 		pillar_bushing(180);
 	}
-}
-if(part==17){
-	echo("name:Gantry_Pillar_2.STL");
-	if(build){
-		pillar_bushing(90);
-	}
+}
+if(part==17){
+	echo("name:Gantry_Pillar_2.STL");
+	if(build){
+		pillar_bushing(90);
+	}
 }
 if(part==18){
 	echo("name:Sleds_1-4.STL");
 	if(build){
 		slider();
 	}
-}
-if(part==19{
-	echo("name:top1.STL");
-	if(build){
-		top_pillar_mount(0);
-	}
-}
-if(part==19{
-	echo("name:top2.STL");
-	if(build){
-		top_pillar_mount(180);
-	}
-}
-if(part==19{
-	echo("name:top3.STL");
-	if(build){
-		top_pillar_mount(90);
-	}
+}
+if(part==19){
+	echo("name:top1.STL");
+	if(build){
+		top_pillar_mount(0);
+	}
+}
+if(part==20){
+	echo("name:top2.STL");
+	if(build){
+		top_pillar_mount(180);
+	}
+}
+if(part==21){
+	echo("name:top3.STL");
+	if(build){
+		top_pillar_mount(90);
+	}
 }

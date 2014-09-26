@@ -2,7 +2,7 @@
 SET Working_Directory=C:\Users\camer_000\Documents\GitHub\Ring_Rap_OpenSCAD_Remix\
 SET STL_Directory=C:\Users\camer_000\Documents\GitHub\Ring_Rap_OpenSCAD_Remix\STLS\
 cd C:\Program Files (x86)\OpenSCAD\
-set  tot_stls=16
+set  tot_stls=21
 
 
 @echo off
@@ -31,10 +31,14 @@ openscad.com -o %STL_Directory%%var1% -D %part_no% -D build=true "%Working_Direc
 SET /a i=%i%+1
 GOTO LOOP
 :end
-cd "%Working_Directory%"
+
+echo cd c:\
+echo cd "%Working_Directory%"
 
 
 cmd /c %*
+
+cd C:\Users\camer_000\Documents\GitHub\Ring_Rap_OpenSCAD_Remix
 
 set end=%time%
 set options="tokens=1-4 delims=:."
