@@ -31,7 +31,6 @@ module pillar_base_print_ready(){
 	rotate([0,0,180])translate([2.5,0,0])pillar_for_print(180);
 }
 module base_pillar_set(){
-	echo(number_of_pillars);
 if(number_of_pillars==2){
 		pillar_legs(0);
 		pillar_legs(180);
