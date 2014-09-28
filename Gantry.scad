@@ -4,12 +4,12 @@ include <rim.scad>
 include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
-carrage_z_offset=overall_rim_thickness/2+distance_between_rods/2+mount_wall_thickness+cross_carriage_bearings[2]/2;//computes the 
+carrage_z_offset=overall_rim_thickness/2+distance_between_rods/2+mount_wall_thickness+cross_carriage_bearings[2]/2+gantry_end_bearing[1]/2-gantry_end_bearing[2]/2+extra_space_for_belt;//computes the gantry center height
 
 
 module slider(Z_angle=0,x_angle=0){
 
-	rotate([0,0,Z_angle])translate([0,sin(45)*iso_rim_size/2,carrage_z_offset]){
+	rotate([0,0,Z_angle])translate([0,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset]){
 		rotate([0,x_angle,0])difference(){
 			hull(){
 				translate([0,0,distance_between_rods/2-Sled_bearings[1]*.2/2-mount_wall_thickness/2])cube([Sled_bearings[0],Sled_bearings[1]+mount_wall_thickness*2,Sled_bearings[1]*.8+mount_wall_thickness],center=true);
@@ -22,7 +22,7 @@ module slider(Z_angle=0,x_angle=0){
 }
 module slider_bearing(Z_angle=0,x_angle=0){
 
-	rotate([0,0,Z_angle])translate([0,sin(45)*iso_rim_size/2,carrage_z_offset]){
+	rotate([0,0,Z_angle])translate([0,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset]){
 		rotate([0,x_angle,0])difference(){
 			translate([0,0,Sled_bearings[1]/2])rotate([0,90,0])cylinder(r=Sled_bearings[1]/2,h=Sled_bearings[0]+1,center=true);
 			translate([0,0,Sled_bearings[1]/2])rotate([0,90,0])cylinder(r=Sled_bearings[2]/2,h=Sled_bearings[0]*2,center=true);
@@ -39,9 +39,9 @@ module assembled_gantry(){
 	slider_bearing(90,180);
 	slider_bearing(180);
 	slider_bearing(270,180);
-	carriage_rim_mount(45);
+	carriage_rim_mount(45,true);
 	carriage_rim_mount(135);
-	carriage_rim_mount(225);
+	carriage_rim_mount(225,true);
 	carriage_rim_mount(315);
 	translate([0,0,carrage_z_offset]){
 		translate([0,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[2]/2,h=sin(45)*iso_rim_size,center=true);
@@ -54,7 +54,6 @@ module assembled_gantry(){
 	ganntry_pillar_bushings_set();
 }
 module ganntry_pillar_set(){
-	echo(number_of_pillars);
 if(number_of_pillars==2){
 		pillar_bushing(0);
 		pillar_bushing(180);
@@ -72,7 +71,6 @@ if(number_of_pillars==2){
 	}
 }
 module ganntry_pillar_bushings_set(){
-	echo(number_of_pillars);
 if(number_of_pillars==2){
 		pillar_bushing_only(0);
 		pillar_bushing_only(180);
@@ -100,7 +98,7 @@ module assembled_cross_carrage(){
 module cross_carrage(){
 	difference(){
 		hull(){
-			translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,-distance_between_rods/2+(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)])rotate([0,0,90])cube([cross_carriage_bearings[0]-.4,cross_carriage_bearings[1]+gantry_wall_thickness,cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
+			translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,-distance_between_rods/2+(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)])rotate([0,0,90])cube([cross_carriage_bearings[0]-.4,cross_carriage_bearings[1]+2*gantry_wall_thickness,cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
 			rotate([0,0,-90])translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,distance_between_rods/2-(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1]+gantry_wall_thickness*2,cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
 				rotate([0,0,-90])translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)-distance_between_rods/2])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1],cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
 				translate([0,cross_carriage_bearings[0]/2+cross_carriage_bearings[1]/2,distance_between_rods/2-(gantry_wall_thickness/2+cross_carriage_bearings[1]*.1)])rotate([0,0,90])cube([cross_carriage_bearings[0]-.02,cross_carriage_bearings[1],cross_carriage_bearings[1]*.8+gantry_wall_thickness],center=true);
@@ -120,50 +118,97 @@ module cross_carrage(){
 }
 
 
-module carriage_rim_mount(location_angle){
-	difference(){
-		union(){
-			hull(){
-				rotate([0,0,90-location_angle])translate([iso_rim_size/2-sqrt(motor_x*motor_x+motor_y*motor_y)/2,0,overall_rim_thickness/2+mount_wall_thickness/2])cylinder(r=rim_bevel_radius,h=cross_carriage_bearings[2]*2+distance_between_rods);
-				rotate([0,0,90-location_angle])translate([iso_rim_size/2+sqrt(motor_x*motor_x+motor_y*motor_y)/2,0,overall_rim_thickness/2+mount_wall_thickness/2])cylinder(r=rim_bevel_radius,h=cross_carriage_bearings[2]*2+distance_between_rods);
-
-				rotate([0,0,90-location_angle])translate([iso_rim_size/2,-sqrt(motor_x*motor_x+motor_y*motor_y)/2,overall_rim_thickness/2+mount_wall_thickness/2])cylinder(r=rim_bevel_radius,h=cross_carriage_bearings[2]*2+distance_between_rods);
-				rotate([0,0,90-location_angle])translate([iso_rim_size/2,sqrt(motor_x*motor_x+motor_y*motor_y)/2,overall_rim_thickness/2+mount_wall_thickness/2])cylinder(r=rim_bevel_radius,h=cross_carriage_bearings[2]*2+distance_between_rods);
+module carriage_rim_mount(location_angle,motor_mount=false){
+	intersection(){
+		difference(){
+			union(){
+				hull(){
+					rotate([0,0,90-location_angle])translate([iso_rim_size/2+sqrt(corner_size*corner_size+corner_size*corner_size)/2,0,overall_rim_thickness/2+mount_wall_thickness/2])rotate([0,0,135])cube(mount_wall_thickness);
+					rotate([0,0,90-location_angle])translate([iso_rim_size/2,-sqrt(corner_size*corner_size+corner_size*corner_size)/2,overall_rim_thickness/2+mount_wall_thickness/2])rotate([0,0,45])cube(mount_wall_thickness);
+					rotate([0,0,90-location_angle])translate([iso_rim_size/2,sqrt(corner_size*corner_size+corner_size*corner_size)/2,overall_rim_thickness/2+mount_wall_thickness/2])rotate([0,0,135])cube(mount_wall_thickness);
+				}
+				hull(){
+					rim_segment(iso_rim_size-mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+					translate([0,0,-mount_wall_thickness])rim_segment(iso_rim_size, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+				translate([0,0,mount_wall_thickness])rim_segment(iso_rim_size, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+				}
+			
+				rotate([0,0,90-location_angle])translate([iso_rim_size/2+sqrt(corner_size*corner_size+corner_size*corner_size)/2,0,overall_rim_thickness/2+mount_wall_thickness/2])rotate([0,0,135])cube([corner_size+mount_wall_thickness,mount_wall_thickness+gantry_end_bearing[0],mount_wall_thickness*2+gantry_end_bearing[1]+distance_between_rods]);
+				rotate([0,0,90-location_angle])translate([iso_rim_size/2+sqrt(corner_size*corner_size+corner_size*corner_size)/2,0,overall_rim_thickness/2+mount_wall_thickness/2])rotate([0,0,225])mirror([0,1,0])cube([corner_size,mount_wall_thickness+gantry_end_bearing[0],mount_wall_thickness*2+gantry_end_bearing[1]+distance_between_rods]);
+				if(motor_mount){
+					rotate([0,0,90-location_angle])translate([iso_rim_size/2+sqrt(corner_size*corner_size+corner_size*corner_size)/2,0,overall_rim_thickness/2+mount_wall_thickness/2+mount_wall_thickness*2+gantry_end_bearing[1]+distance_between_rods])rotate([0,0,135])cube([corner_size+mount_wall_thickness,corner_size,mount_wall_thickness]);
+				}
 			}
+			rim_segment_spoked(iso_rim_size, number_of_spokes, location_angle-8,location_angle+15,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
 			hull(){
-				rim_segment(iso_rim_size-mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
-				translate([0,0,-mount_wall_thickness])rim_segment(iso_rim_size, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
-			translate([0,0,mount_wall_thickness])rim_segment(iso_rim_size, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
-rotate([0,0,90-location_angle])translate([iso_rim_size/2-sqrt(motor_x*motor_x+motor_y*motor_y)/2,0,-overall_rim_thickness/2-mount_wall_thickness])cylinder(r=rim_bevel_radius,h=overall_rim_thickness+mount_wall_thickness*2);
+				rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
+				rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2+2*mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
 			}
+			rods_difference();
 		}
-		rim_segment_spoked(iso_rim_size, number_of_spokes, location_angle-8,location_angle+15,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
-		hull(){
-			rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
-			rim_segment(iso_rim_size+rim_distance_from_bead_to_inner_circle/2+2*mount_wall_thickness, number_of_spokes, location_angle-7.5,location_angle+7.5,number_of_segments=5,spoke_hole_diam=2,rim_shape=cur_rim_shape,$fn=15);
-		}
-		translate([0,50,-distance_between_rods/2])rotate([0,90,90])cylinder(r=cross_carriage_bearings[2]/2,h=sin(45)*iso_rim_size,center=true);
-	
-		rods();
+		rotate([0,0,90-location_angle])translate([iso_rim_size/2+sqrt(corner_size*corner_size+corner_size*corner_size)/2,0,-overall_rim_thickness])rotate([0,0,135])cube([corner_size*2+mount_wall_thickness,corner_size*2,mount_wall_thickness+overall_rim_thickness+mount_wall_thickness/2+mount_wall_thickness*+gantry_end_bearing[1]*2+distance_between_rods*5]);
 	}
 }
 
 module rods(){
-translate([0,sin(45)*iso_rim_size/2,carrage_z_offset]){
-		translate([0,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[2]/2,h=sin(45)*iso_rim_size*1.25,center=true);
+	translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	mirror([1,0,0]){
+		translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
 	}
-	translate([0,-sin(45)*iso_rim_size/2,carrage_z_offset]){
-		translate([0,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[2]/2,h=sin(45)*iso_rim_size*1.25,center=true);
+	mirror([0,1,0]){
+		translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+		mirror([1,0,0]){
+			translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+		}
+	}
+	translate([0,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset]){
+		translate([0,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[2]*.5,h=sin(45)*iso_rim_size*1.25,center=true);
+	}
+	translate([0,corner_size/2-gantry_end_bearing[1]/2-mount_wall_thickness-sin(45)*iso_rim_size/2,carrage_z_offset]){
+		translate([0,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[2]*.5,h=sin(45)*iso_rim_size*1.25,center=true);
 	}
 
-	translate([sin(45)*iso_rim_size/2,0,carrage_z_offset]){
-		translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]/2,h=sin(45)*iso_rim_size*1.25,center=true);
+	translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,0,carrage_z_offset]){
+		translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]*.5,h=sin(45)*iso_rim_size*1.25,center=true);
 	}
-	translate([-sin(45)*iso_rim_size/2,0,carrage_z_offset]){
-		translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]/2,h=sin(45)*iso_rim_size*1.25,center=true);
+	translate([corner_size/2-gantry_end_bearing[1]/2-mount_wall_thickness-sin(45)*iso_rim_size/2,0,carrage_z_offset]){
+		translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]*.5,h=sin(45)*iso_rim_size*1.25,center=true);
 	}
 }
 
+module rods_difference(){
+	translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	mirror([1,0,0]){
+		translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	}
+	mirror([0,1,0]){
+		translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+		mirror([1,0,0]){
+			translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,carrage_z_offset-distance_between_rods/2])rotate([90,0,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+	translate([sin(45)*iso_rim_size/2+corner_size/2-mount_wall_thickness,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset+distance_between_rods/2])rotate([0,-90,0])cylinder(r=gantry_end_bearing[1]/2,h=gantry_end_bearing[0]+.1);
+		}
+	}
+	translate([0,sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,carrage_z_offset]){
+		translate([0,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[2]*.75,h=sin(45)*iso_rim_size*1.25,center=true);
+	}
+	translate([0,corner_size/2-gantry_end_bearing[1]/2-mount_wall_thickness-sin(45)*iso_rim_size/2,carrage_z_offset]){
+		translate([0,0,distance_between_rods/2])rotate([0,90,0])cylinder(r=cross_carriage_bearings[2]*.75,h=sin(45)*iso_rim_size*1.25,center=true);
+	}
+
+	translate([sin(45)*iso_rim_size/2-corner_size/2+gantry_end_bearing[1]/2+mount_wall_thickness,0,carrage_z_offset]){
+		translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]*.75,h=sin(45)*iso_rim_size*1.25,center=true);
+	}
+	translate([corner_size/2-gantry_end_bearing[1]/2-mount_wall_thickness-sin(45)*iso_rim_size/2,0,carrage_z_offset]){
+		translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]*.75,h=sin(45)*iso_rim_size*1.25,center=true);
+	}
+}
 module pillar_bushing_only(location_angle){
 	difference(){
 		rotate([0,0,90-location_angle])translate([iso_rim_size/2-rim_distance_from_bead_to_inner_circle-pillar_support_wall_thickness-pillar_rod_diameter/2,0,0]){
