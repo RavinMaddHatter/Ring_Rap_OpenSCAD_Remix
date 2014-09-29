@@ -5,8 +5,8 @@ include <Build_specifications.scad>
 //Utility_Functions.scad contains some handy generic funcitons, like nuts, bolts, and others
 include <Utility_Functions.scad>
 //Base for Ring_rap is contained in Base.scad
-include <Base.scad>
-//top for Ring_rap is contained in Top.scad
+include <Base.scad>
+//top for Ring_rap is contained in Top.scad
 include <Top.scad>
 //gantry for Ring_rap is contained in Base.scad
 include <Gantry.scad>

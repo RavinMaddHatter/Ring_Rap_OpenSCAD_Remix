@@ -1,5 +1,12 @@
-include <constants.scad>
+include <constants.scad>
 
+module belt_teeth(belt_type=[1.25,0.85,2.5,6,1.5],num_teeth=3){
+	for(i = [-1:num_teeth-2]){
+	// teeth to grip belt	
+	translate([belt_type[3] / 2 + i * belt_type[2], 0, belt_type[1] / 2 - .01 ])
+	cube([belt_type[0], belt_type[3], belt_type[1]], center = true);
+	}
+}
 
 module nut(nut_wrench_size_in_mm,nut_thickness,center_diameter=0){
 	difference(){

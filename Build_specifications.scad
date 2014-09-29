@@ -10,7 +10,7 @@ cur_rim_shape="Nucleon_Front";
 rim_distance_from_bead_to_inner_circle=15;
 overall_rim_thickness=18.6;
 
-//feet sizeing
+//feet sizing
 base_leg_footprint=60;
 base_leg_height=35;
 bed_leveling_nut_trap_wrench_width=5.5;
@@ -36,8 +36,12 @@ LM10UU = [29, 19, 10];
 LM8UU  = [24, 15,  8];
 LM6UU  = [19, 12,  6];
 LM4UU  = [12,  8,  4];
-guess_at_tower_bushings=[70,29,25];
-ZZ608 = [7, 22, 8];
+guess_at_tower_bushings=[70,29,25];
+ZZ608 = [7, 22, 8];
+
+//standard belts [tooth_w, belt_t_h,belt_pitch,belt_w
+GT2=[1.25,0.85,2.5,6,1.5];
+
 
 //Gantry Sizing
 cross_carriage_bearings=LM8UU;
@@ -45,9 +49,14 @@ distance_between_rods=15;
 gantry_wall_thickness=4;
 hot_end_cut_out_radius=30;
 mount_screw_diam=4;
-mount_screw_depth=10;
-extra_space_for_belt=2;
+mount_screw_depth=10;
+extra_space_for_belt=2;
 gantry_end_bearing=ZZ608;
+screw_trap_z_thickness=3;
+//[number of sides, thickness. nut diameter, screw diameter]
+Z_screw_nut=[5,6,10,5];
+z_screw_mount_thickness = (screw_trap_z_thickness+Z_screw_nut[1] );
+belt_type=GT2;
 
 //gantry brackets
 mount_wall_thickness=3;
