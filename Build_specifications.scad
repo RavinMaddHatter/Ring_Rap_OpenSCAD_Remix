@@ -54,7 +54,7 @@ extra_space_for_belt=2;
 gantry_end_bearing=ZZ608;
 screw_trap_z_thickness=3;
 //[number of sides, thickness. nut diameter, screw diameter]
-Z_screw_nut=[5,6,10,5];
+Z_screw_nut=[5,6,10,6];
 z_screw_mount_thickness = (screw_trap_z_thickness+Z_screw_nut[1] );
 belt_type=GT2;
 

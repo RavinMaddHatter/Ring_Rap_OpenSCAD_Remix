@@ -22,11 +22,14 @@ module slider(Z_angle=0,x_angle=0){
 					translate([0,0,-distance_between_rods/2-Sled_bearings[2]-mount_wall_thickness/2])cube([Sled_bearings[1],Sled_bearings[1]+mount_wall_thickness*2,.1],center=true);
 				}
 				translate([-Sled_bearings[1]/2,-Sled_bearings[1]/2-mount_wall_thickness,-distance_between_rods/2-Sled_bearings[2]-mount_wall_thickness/2+belt_type[4]]){
-					cube([Sled_bearings[1],Sled_bearings[1]+mount_wall_thickness*2+belt_type[3]+1,Sled_bearings[2]+mount_wall_thickness/2-belt_type[4]]);
-					translate([0,Sled_bearings[1]+mount_wall_thickness*2+belt_type[3]/2,0])rotate([180,0,0])belt_teeth(belt_type,6);
-					translate([0,Sled_bearings[1]+mount_wall_thickness*2+belt_type[3],-belt_type[4]])cube([Sled_bearings[1],mount_wall_thickness,Sled_bearings[2]+mount_wall_thickness/2]);
+					cube([Sled_bearings[1],Sled_bearings[1]+mount_wall_thickness*2+belt_type[3]+1,Sled_bearings[2]*2+mount_wall_thickness-belt_type[4]*2]);
+					translate([0,Sled_bearings[1]+mount_wall_thickness*2+belt_type[3]/2,0])rotate([180,0,0])belt_teeth(belt_type,num_teeth_on_slider);
+					translate([0,Sled_bearings[1]+mount_wall_thickness*2+belt_type[3],-belt_type[4]])cube([Sled_bearings[1],mount_wall_thickness,Sled_bearings[2]*2+mount_wall_thickness]);
+					translate([0,Sled_bearings[1]+mount_wall_thickness*2+belt_type[3]/2,Sled_bearings[2]*2+mount_wall_thickness-belt_type[4]*2])rotate([0,0,0])belt_teeth(belt_type,num_teeth_on_slider);
 				}
-			}
+			}
+			
+			translate([0,Sled_bearings[1]/2+mount_wall_thickness+belt_type[3]/2,-cross_carriage_bearings[1]/2])cube([999,belt_type[3],belt_type[4]],center=true);
 			translate([0,0,cross_carriage_bearings[1]/2])rotate([0,90,0])cylinder(r=Sled_bearings[1]/2,h=Sled_bearings[0]*2,center=true);
 			translate([0,0,-distance_between_rods/2])rotate([90,0,0])cylinder(r=cross_carriage_bearings[2]/2,h=Sled_bearings[1]*2+belt_type[3]*2+mount_wall_thickness*2,center=true);
 		}
